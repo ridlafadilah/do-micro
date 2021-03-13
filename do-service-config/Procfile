@@ -1,1 +1,1 @@
-web: java --server.port=$PORT -Dspring.profiles.active=git $JAVA_OPTS -jar do-service-config/target/*.war
+web java -Dserver.port=$PORT -Dspring.profiles.active=git $JAVA_OPTS -jar do-service-config/target/*.war
