@@ -4,16 +4,22 @@ server:
 info:
   component: Config Server
 
+spring:
+  application:
+    name: ${application.name}
+  aop:
+    proxy-target-class: true
+
 ---
 spring:
   profiles: git
   cloud:
     config:
-      label: cloud-config
       server:
         git:
           uri: https://github.com/ridlafadilah/do-micro.git
           clone-on-start: true
+          default-label: cloud-config
 
 ---
 spring:
@@ -21,5 +27,6 @@ spring:
   cloud:
     config:
       server:
+        bootstrap: true
         native:
-          searchLocations: file:///config_shared/
+          searchLocations: file:D:/Ridla/Dongkap/Workspace/do-micro_cloud-config

@@ -9,12 +9,12 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 @EnableConfigServer
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+public class ConfigApplication extends SpringBootServletInitializer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigApplication.class);
 	
     public static void main(String[] args) {
-	    SpringApplication.run(Application.class, args);
+	    SpringApplication.run(ConfigApplication.class, args);
         LOG.info("Dongkap!");
     }
 
