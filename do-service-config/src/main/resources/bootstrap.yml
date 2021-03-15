@@ -17,6 +17,7 @@ spring:
     config:
       label: cloud-config
       server:
+        bootstrap: true
         git:
           uri: https://github.com/ridlafadilah/do-micro.git
           clone-on-start: true
