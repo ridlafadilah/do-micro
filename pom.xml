@@ -91,7 +91,7 @@
         <module>do-common</module> 
         <module>do-feign</module>
         <module>do-service-config</module>
-        <module>do-service-security</module>
+		<!-- <module>do-service-security</module> -->
     </modules>
 	
 	<build>
