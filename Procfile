@@ -1,0 +1,1 @@
+web java -jar -Dserver.port=$PORT $JAVA_OPTS $SERVICE_OPTS $SERVICE_NAME/target/*.war

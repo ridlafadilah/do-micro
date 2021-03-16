@@ -88,14 +88,33 @@
 		<modelmapper.version>1.1.0</modelmapper.version>
 		<!-- APPLICATION FINAL NAME -->
 	</properties>
-	
-    <modules>
-        <module>do-common</module> 
-        <module>do-feign</module>
-        <module>do-service-config</module>
-		<module>do-service-security</module>
-		<module>do-service-master</module>
-    </modules>
+
+    <profiles>
+    	<profile>
+    		<id>config</id>
+    		<modules>
+		        <module>do-common</module> 
+		        <module>do-feign</module>
+		        <module>do-service-config</module>
+    		</modules>
+    	</profile>
+    	<profile>
+    		<id>security</id>
+    		<modules>
+		        <module>do-common</module> 
+		        <module>do-feign</module>
+		        <module>do-service-security</module>
+    		</modules>
+    	</profile>
+    	<profile>
+    		<id>master</id>
+    		<modules>
+		        <module>do-common</module> 
+		        <module>do-feign</module>
+		        <module>do-service-master</module>
+    		</modules>
+    	</profile>
+    </profiles>
 	
 	<build>
 		<finalName>${web-gui.finalName}</finalName>
