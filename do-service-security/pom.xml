@@ -12,6 +12,7 @@
 	</parent>
 
 	<properties>
+		<start-class>com.dongkap.security.SecurityApplication</start-class>
 		<application.name>do-service-security</application.name>
 	</properties>
 
