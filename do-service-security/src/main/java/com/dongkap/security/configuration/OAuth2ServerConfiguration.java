@@ -28,7 +28,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.dongkap.security.service.JdbcOauth2ClientDetailsService;
-import com.dongkap.security.service.JdbcOauth2TokenStore;
 import com.dongkap.security.service.UserDetailsImplService;
 
 @Configuration
@@ -44,6 +43,9 @@ public class OAuth2ServerConfiguration extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private DataSource dataSource;
+	
+    @Autowired
+    private TokenStore tokenStore;
     
     @Autowired
     private UserDetailsImplService userDetailsService;
@@ -76,7 +78,7 @@ public class OAuth2ServerConfiguration extends AuthorizationServerConfigurerAdap
                 .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
-                .tokenStore(tokenStore())
+                .tokenStore(tokenStore)
                 .reuseRefreshTokens(false)
                 .setClientDetailsService(jdbcClientDetailService());
         // @formatter:on
@@ -87,11 +89,6 @@ public class OAuth2ServerConfiguration extends AuthorizationServerConfigurerAdap
         // @formatter:off
     	clients.withClientDetails(jdbcClientDetailService());
         // @formatter:on
-    }
-    
-    @Bean
-    public TokenStore tokenStore() {
-        return new JdbcOauth2TokenStore(dataSource);
     }
     
     @Bean
@@ -113,7 +110,7 @@ public class OAuth2ServerConfiguration extends AuthorizationServerConfigurerAdap
         defaultTokenServices.setSupportRefreshToken(true);
         defaultTokenServices.setReuseRefreshToken(false);
         defaultTokenServices.setAuthenticationManager(authenticationManager);
-        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setTokenStore(tokenStore);
         defaultTokenServices.setClientDetailsService(jdbcClientDetailService());
         defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
         return defaultTokenServices;

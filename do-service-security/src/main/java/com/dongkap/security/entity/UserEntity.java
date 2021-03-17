@@ -22,10 +22,12 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.dongkap.common.entity.BaseAuditEntity;
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.utils.SchemaDatabase;
 
 import lombok.AllArgsConstructor;
@@ -111,8 +113,10 @@ public class UserEntity extends BaseAuditEntity implements UserDetails, OAuth2Us
 	@Override
 	@Transient
 	public Set<GrantedAuthority> getAuthorities() {
-		Set<GrantedAuthority> authorities = new LinkedHashSet<GrantedAuthority>();
-		authorities.addAll(roles);
+		final Set<GrantedAuthority> authorities = new LinkedHashSet<GrantedAuthority>();
+		roles.forEach(role->{
+			authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+		});
 		return authorities;
 	}
 
@@ -135,5 +139,20 @@ public class UserEntity extends BaseAuditEntity implements UserDetails, OAuth2Us
 	
 	@OneToOne(mappedBy = "user", targetEntity = SettingsEntity.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private SettingsEntity settings;
+
+	@Transient
+	public UserPrincipal getUserPrincipal() {
+		this.getAttributes().put("image", this.contactUser.getImage());
+		this.getAttributes().put("locale", this.settings.getLocaleCode());
+		this.getAttributes().put("theme", this.settings.getTheme());
+		UserPrincipal userPrincipal = new UserPrincipal(this.id, this.username, this.password, this.enabled,
+				this.accountNonExpired, this.credentialsNonExpired,
+				this.accountNonLocked, getName(), this.email, this.provider,
+		this.verificationCode,
+				this.verificationExpired,
+				this.raw,
+				this.authorityDefault, getAuthorities(), this.getAttributes());
+		return userPrincipal;
+	}
 
 }

@@ -33,12 +33,12 @@ public class JwtTokenConfiguration {
 				if (!accessToken.getAdditionalInformation().isEmpty()) {
 					Map<String, Object> temp = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
 					accessToken.getAdditionalInformation().clear();
-					accessToken.getAdditionalInformation().put("image", temp.get("image"));
 					accessToken.getAdditionalInformation().put("username", temp.get("username"));
 					accessToken.getAdditionalInformation().put("authority", temp.get("authority"));
 					accessToken.getAdditionalInformation().put("provider", temp.get("provider"));
 					accessToken.getAdditionalInformation().put("email", temp.get("email"));
 					accessToken.getAdditionalInformation().put("name", temp.get("name"));
+					accessToken.getAdditionalInformation().put("image", temp.get("image"));
 					accessToken.getAdditionalInformation().put("locale", temp.get("locale"));
 					accessToken.getAdditionalInformation().put("theme", temp.get("theme"));
 					accessToken.getAdditionalInformation().put("server_date", DateUtil.DATE.format(new Date()));

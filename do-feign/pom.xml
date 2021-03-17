@@ -50,6 +50,12 @@
 			<groupId>io.github.openfeign.form</groupId>
 			<artifactId>feign-form-spring</artifactId>
 			<version>${openfeign.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-web</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.dongkap</groupId>

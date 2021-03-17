@@ -1,5 +1,7 @@
 server:
-  port: ${PORT:8086}
+  port: ${PORT:8087}
+  servlet:
+    context-path: /do
 
 spring:
   application:
@@ -15,6 +17,34 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 60MB
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    platform: postgres
+    type: com.mchange.v2.c3p0.ComboPooledDataSource
+    tomcat:
+      validation-query: SELECT 1
+      initial-size: 10
+      max-active: 100
+      max-idle: 20
+      max-wait: 3000
+      test-while-idle: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        temp:
+          use_jdbc_metadata_defaults: false
+        show_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
 eureka:
   client:
@@ -97,11 +127,16 @@ do-security:
 
 security:
   oauth2:
+    client:
+      client-id: do-core
+      client-secret: secretdo01
+      access-token-uri: http://localhost:8086/do/oauth/token
     resource:
       filter-order: 3
       jwt:
         key-value: CfZKBe7IZHxBCgH9Dz49
       prefer-token-info: true
+      token-info-uri: http://localhost:8086/do/oauth/check_token
 
 ---
 spring:
@@ -121,36 +156,13 @@ spring:
         enabled: false
       fail-fast: true
   datasource:
-    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-    platform: postgres
-    type: com.mchange.v2.c3p0.ComboPooledDataSource
-    tomcat:
-      validation-query: SELECT 1
-      initial-size: 10
-      max-active: 100
-      max-idle: 20
-      max-wait: 3000
-      test-while-idle: true
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
-    database: POSTGRESQL
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-        temp:
-          use_jdbc_metadata_defaults: false
-        show_sql: true
-    show-sql: true
-    hibernate:
-      ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
 
 ---
 spring:
