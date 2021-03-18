@@ -9,6 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.ErrorCode;
@@ -16,7 +17,6 @@ import com.dongkap.common.utils.SuccessCode;
 import com.dongkap.feign.dto.security.SettingsDto;
 import com.dongkap.security.dao.SettingsRepo;
 import com.dongkap.security.entity.SettingsEntity;
-import com.dongkap.security.entity.UserEntity;
 
 @Service("settingsService")
 public class SettingsImplService {
@@ -30,9 +30,9 @@ public class SettingsImplService {
 	private MessageSource messageSource;
 
 	@Transactional
-	public ApiBaseResponse doUpdateSettings(SettingsDto p_dto, UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null) {
-			SettingsEntity settings = this.settingsRepo.findByUser_Username(p_user.getUsername());
+	public ApiBaseResponse doUpdateSettings(SettingsDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null) {
+			SettingsEntity settings = this.settingsRepo.findByUser_Username(userPrincipal.getUsername());
 			settings.setTheme(p_dto.getTheme());
 			if (p_dto.getLocaleCode() != null)
 				settings.setLocaleCode(p_dto.getLocaleCode());
@@ -50,10 +50,10 @@ public class SettingsImplService {
 			throw new SystemErrorException(ErrorCode.ERR_SYS0404);
 	}
 	
-	public SettingsDto getSettings(UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null) {
+	public SettingsDto getSettings(UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null) {
 			SettingsDto dto = new SettingsDto();
-			SettingsEntity settings = this.settingsRepo.findByUser_Username(p_user.getUsername());
+			SettingsEntity settings = this.settingsRepo.findByUser_Username(userPrincipal.getUsername());
 			dto.setLocaleCode(settings.getLocaleCode());
 			dto.setLocaleIdentifier(settings.getLocaleIdentifier());
 			dto.setLocaleIcon(settings.getLocaleIcon());

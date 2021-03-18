@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.ErrorCode;
@@ -22,7 +23,6 @@ import com.dongkap.security.dao.RoleRepo;
 import com.dongkap.security.entity.FunctionEntity;
 import com.dongkap.security.entity.MenuEntity;
 import com.dongkap.security.entity.RoleEntity;
-import com.dongkap.security.entity.UserEntity;
 
 @Service("functionService")
 public class FunctionImplService {
@@ -45,7 +45,7 @@ public class FunctionImplService {
 	private String locale;
 
 	@Transactional
-	public ApiBaseResponse doPostFunction(FunctionRequestDto p_dto, UserEntity user, String p_locale) throws Exception {
+	public ApiBaseResponse doPostFunction(FunctionRequestDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
 		if (p_dto != null) {
 			if(p_dto.getMenus() == null)
 				throw new SystemErrorException(ErrorCode.ERR_SYS0404);
@@ -62,7 +62,7 @@ public class FunctionImplService {
 					function.setRoleId(role.getId());
 					// function.setMenu(menu);
 					// function.setRole(role);
-					function.setCreatedBy(user.getUsername());
+					function.setCreatedBy(userPrincipal.getUsername());
 					function.setCreatedDate(new Date());
 					functions.add(function);
 				}

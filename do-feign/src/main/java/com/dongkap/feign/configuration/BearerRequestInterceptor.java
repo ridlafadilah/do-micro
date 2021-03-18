@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
@@ -18,6 +19,15 @@ public class BearerRequestInterceptor implements RequestInterceptor {
 	protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	private FeignSignatureInterceptor feignSignatureInterceptor;
+
+	@Value("${do.signature.param-key}")
+	private String paramKey;
+
+	@Value("${do.signature.param-timestamp}")
+	private String paramTimestamp;
+
+	@Value("${do.signature.param-signature}")
+	private String paramSignature;
 	
 	public BearerRequestInterceptor() {}
 	public BearerRequestInterceptor(FeignSignatureInterceptor feignSignatureInterceptor) {
@@ -32,9 +42,9 @@ public class BearerRequestInterceptor implements RequestInterceptor {
 		if (!tokenType.isEmpty() && !tokenValue.isEmpty()) {
 			Map<String, Collection<String>> headers = new HashMap<String, Collection<String>>();
 			headers.put("Authorization", Arrays.asList(String.format("%s %s",tokenType,tokenValue)));
-			headers.put("X-XA-Key", Arrays.asList(this.feignSignatureInterceptor.getPublicKey()));
-			headers.put("X-XA-Timestamp", Arrays.asList(this.feignSignatureInterceptor.getTimestamp()));
-			headers.put("X-XA-Signature", Arrays.asList(this.feignSignatureInterceptor.getSignature(requestTemplate.path(), tokenValue)));
+			headers.put(paramKey, Arrays.asList(this.feignSignatureInterceptor.getPublicKey()));
+			headers.put(paramTimestamp, Arrays.asList(this.feignSignatureInterceptor.getTimestamp()));
+			headers.put(paramSignature, Arrays.asList(this.feignSignatureInterceptor.getSignature(requestTemplate.path(), tokenValue)));
 			requestTemplate.headers(headers);
 		}
     }

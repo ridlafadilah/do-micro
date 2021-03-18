@@ -18,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.ErrorCode;
@@ -29,7 +30,6 @@ import com.dongkap.feign.dto.tree.TreeDto;
 import com.dongkap.security.dao.MenuRepo;
 import com.dongkap.security.entity.MenuEntity;
 import com.dongkap.security.entity.MenuI18nEntity;
-import com.dongkap.security.entity.UserEntity;
 
 @Service("menuService")
 public class MenuImplService {
@@ -44,7 +44,7 @@ public class MenuImplService {
 	private String locale;
 
 	@Transactional
-	public ApiBaseResponse doPostMenu(MenuItemDto p_dto, UserEntity user, String p_locale) throws Exception {
+	public ApiBaseResponse doPostMenu(MenuItemDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
 		if (p_dto != null) {
 			if(p_dto.getI18n() == null)
 				throw new SystemErrorException(ErrorCode.ERR_SYS0404);
@@ -54,20 +54,20 @@ public class MenuImplService {
 				menu = this.menuRepo.findById(p_dto.getId()).orElse(null);
 				if (menu == null)
 					throw new SystemErrorException(ErrorCode.ERR_SYS0404);					
-				menu.setModifiedBy(user.getUsername());
+				menu.setModifiedBy(userPrincipal.getUsername());
 				menu.setModifiedDate(new Date());
 				for(final String key: p_dto.getI18n().keySet()) {
 					menuI18n = menu.getMenuI18n().stream().filter(i18n -> key.equals(i18n.getLocale())).findFirst().orElse(null);
 					if(menuI18n != null) {
 						menuI18n.setTitle(p_dto.getI18n().get(key));
-						menuI18n.setModifiedBy(user.getUsername());
+						menuI18n.setModifiedBy(userPrincipal.getUsername());
 						menuI18n.setModifiedDate(new Date());
 						menuI18n.setMenu(menu);
 					} else {
 						menuI18n = new MenuI18nEntity();
 						menuI18n.setLocale(key);
 						menuI18n.setTitle(p_dto.getI18n().get(key));
-						menuI18n.setCreatedBy(user.getUsername());
+						menuI18n.setCreatedBy(userPrincipal.getUsername());
 						menuI18n.setCreatedDate(new Date());
 						menuI18n.setMenu(menu);
 					}
@@ -75,13 +75,13 @@ public class MenuImplService {
 				}
 			} else {
 				menu = new MenuEntity();
-				menu.setCreatedBy(user.getUsername());
+				menu.setCreatedBy(userPrincipal.getUsername());
 				menu.setCreatedDate(new Date());
 				for(String key: p_dto.getI18n().keySet()) {
 					menuI18n = new MenuI18nEntity();
 					menuI18n.setLocale(key);
 					menuI18n.setTitle(p_dto.getI18n().get(key));
-					menuI18n.setCreatedBy(user.getUsername());
+					menuI18n.setCreatedBy(userPrincipal.getUsername());
 					menuI18n.setCreatedDate(new Date());
 					menuI18n.setMenu(menu);
 					menu.getMenuI18n().add(menuI18n);

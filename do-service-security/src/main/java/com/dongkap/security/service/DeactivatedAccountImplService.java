@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.security.AESEncrypt;
@@ -33,23 +34,23 @@ public class DeactivatedAccountImplService {
 	private PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public ApiBaseResponse doDeactivate(Map<String, String> dto, UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null && dto != null) {
+	public ApiBaseResponse doDeactivate(Map<String, String> dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null && dto != null) {
 			if(dto.get("provider") != null) {
 				if(!dto.get("provider").equals(AuthorizationProvider.local.toString())) {
-					return this.deactivatedProvider(dto, p_user, p_locale);
+					return this.deactivatedProvider(dto, userPrincipal, p_locale);
 				} else
 					throw new SystemErrorException(ErrorCode.ERR_SYS0404);
 			} else {
-				return this.deactivated(dto, p_user, p_locale);
+				return this.deactivated(dto, userPrincipal, p_locale);
 			}
 		} else
 			throw new SystemErrorException(ErrorCode.ERR_SYS0404);
 	}
 	
-	private ApiBaseResponse deactivated(Map<String, String> dto, UserEntity p_user, String p_locale) throws Exception {
+	private ApiBaseResponse deactivated(Map<String, String> dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
 		if(dto.get("password") != null) {
-			p_user = this.userRepo.findByUsername(p_user.getUsername());
+			UserEntity p_user = this.userRepo.findByUsername(userPrincipal.getUsername());
 			if (p_user != null) {
 				String password = AESEncrypt.decrypt(this.secretKey, dto.get("password"));
 				if (this.passwordEncoder.matches(password, p_user.getPassword())) {
@@ -68,9 +69,9 @@ public class DeactivatedAccountImplService {
 		
 	}
 	
-	private ApiBaseResponse deactivatedProvider(Map<String, String> dto, UserEntity p_user, String p_locale) throws Exception {
+	private ApiBaseResponse deactivatedProvider(Map<String, String> dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
 		if(dto.get("email") != null && dto.get("provider") != null) {
-			p_user = this.userRepo.findByUsernameAndEmailAndProvider(p_user.getUsername(), dto.get("email"), dto.get("provider"));
+			UserEntity p_user = this.userRepo.findByUsernameAndEmailAndProvider(userPrincipal.getUsername(), dto.get("email"), dto.get("provider"));
 			if (p_user != null) {
 				p_user.setActive(false);
 				p_user.setEnabled(false);

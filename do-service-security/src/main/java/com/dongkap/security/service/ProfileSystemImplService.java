@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.pattern.PatternGlobal;
@@ -19,7 +20,6 @@ import com.dongkap.feign.dto.security.ProfileDto;
 import com.dongkap.feign.service.ProfileSystemService;
 import com.dongkap.security.dao.ContactUserRepo;
 import com.dongkap.security.entity.ContactUserEntity;
-import com.dongkap.security.entity.UserEntity;
 
 @Service("profileSystemService")
 public class ProfileSystemImplService implements ProfileSystemService {
@@ -30,9 +30,9 @@ public class ProfileSystemImplService implements ProfileSystemService {
 	private ContactUserRepo contactUserRepo;
 
 	@Transactional
-	public ApiBaseResponse doUpdateProfileSystem(ProfileDto p_dto, UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null) {
-			ContactUserEntity contactUser = this.contactUserRepo.findByUser_Username(p_user.getUsername());
+	public ApiBaseResponse doUpdateProfileSystem(ProfileDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null) {
+			ContactUserEntity contactUser = this.contactUserRepo.findByUser_Username(userPrincipal.getUsername());
 			if (contactUser != null) {
 				contactUser.setAddress(p_dto.getAddress());
 				contactUser.setCountry(p_dto.getCountry());
@@ -49,9 +49,9 @@ public class ProfileSystemImplService implements ProfileSystemService {
 				contactUser.setDescription(p_dto.getDescription());
 				if (p_dto.getName() != null)
 					contactUser.setName(p_dto.getName());
-				if (p_dto.getEmail() != null && p_user.getProvider().equals(AuthorizationProvider.local.toString())) {
+				if (p_dto.getEmail() != null && userPrincipal.getProvider().equals(AuthorizationProvider.local.toString())) {
 					if (p_dto.getEmail().matches(PatternGlobal.EMAIL.getRegex())) {
-						p_user.setEmail(p_dto.getEmail());	
+						userPrincipal.setEmail(p_dto.getEmail());	
 					} else
 						throw new SystemErrorException(ErrorCode.ERR_SCR0008);
 				}
@@ -61,7 +61,7 @@ public class ProfileSystemImplService implements ProfileSystemService {
 					} else
 						throw new SystemErrorException(ErrorCode.ERR_SCR0007A);
 				}
-				contactUser.setModifiedBy(p_user.getUsername());
+				contactUser.setModifiedBy(userPrincipal.getUsername());
 				contactUser.setModifiedDate(new Date());
 				this.contactUserRepo.save(contactUser);
 			}
@@ -71,9 +71,9 @@ public class ProfileSystemImplService implements ProfileSystemService {
 	}
 	
 	public ProfileDto getProfileSystemAuth(Authentication authentication, String p_locale) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		if (user.getUsername() != null) {
-			return getProfileSystem(user.getUsername(), p_locale);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		if (userPrincipal.getUsername() != null) {
+			return getProfileSystem(userPrincipal.getUsername(), p_locale);
 		} else
 			throw new SystemErrorException(ErrorCode.ERR_SYS0404);
 	}

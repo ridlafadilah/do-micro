@@ -22,23 +22,19 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-eureka</artifactId>
 		</dependency>
-		 -->
+		-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-feign</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -53,8 +49,48 @@
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+		        <exclusion>
+		            <groupId>com.zaxxer</groupId>
+		            <artifactId>HikariCP</artifactId>
+		        </exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
+			<exclusions>
+				<exclusion>
+				  <groupId>org.springframework.security</groupId>
+				  <artifactId>spring-security-core</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework.security</groupId>
+				  <artifactId>spring-security-config</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework.security</groupId>
+				  <artifactId>spring-security-web</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-webmvc</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -67,16 +103,6 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<exclusions>
-		        <exclusion>
-		            <groupId>com.zaxxer</groupId>
-		            <artifactId>HikariCP</artifactId>
-		        </exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -119,11 +145,23 @@
 			<groupId>com.dongkap</groupId>
 			<artifactId>do-common</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security.oauth</groupId>
+					<artifactId>spring-security-oauth2</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.dongkap</groupId>
 			<artifactId>do-feign</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security.oauth</groupId>
+					<artifactId>spring-security-oauth2</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- DATABASE -->
@@ -198,6 +236,20 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+				  <groupId>org.springframework</groupId>
+				  <artifactId>spring-aop</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>

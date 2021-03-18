@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.pattern.PatternGlobal;
@@ -32,9 +33,9 @@ public class ChangePasswordImplService {
 	private PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public ApiBaseResponse doChangePassword(ChangePasswordDto p_dto, UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null) {
-			p_user = this.userRepo.findByUsername(p_user.getUsername());
+	public ApiBaseResponse doChangePassword(ChangePasswordDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null) {
+			UserEntity p_user = this.userRepo.findByUsername(userPrincipal.getUsername());
 			String password = AESEncrypt.decrypt(this.secretKey, p_dto.getPassword());
 			String newPassword = AESEncrypt.decrypt(this.secretKey, p_dto.getNewPassword());
 			String confirmPassword = AESEncrypt.decrypt(this.secretKey, p_dto.getConfirmPassword());

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dongkap.common.aspect.ResponseSuccess;
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.BaseControllerException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.SuccessCode;
 import com.dongkap.feign.dto.security.SettingsDto;
-import com.dongkap.security.entity.UserEntity;
 import com.dongkap.security.service.SettingsImplService;
 
 @RestController
@@ -32,15 +32,15 @@ public class SettingsController extends BaseControllerException {
 	public ResponseEntity<ApiBaseResponse> putSettings(Authentication authentication,
 			@RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String locale,
 			@RequestBody(required = true) SettingsDto p_dto) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		return new ResponseEntity<ApiBaseResponse>(settingsService.doUpdateSettings(p_dto, user, locale), HttpStatus.OK);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return new ResponseEntity<ApiBaseResponse>(settingsService.doUpdateSettings(p_dto, userPrincipal, locale), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/vw/get/settings/v.1", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SettingsDto> getSettings(Authentication authentication,
 			@RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String locale) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		return new ResponseEntity<SettingsDto>(settingsService.getSettings(user, locale), HttpStatus.OK);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return new ResponseEntity<SettingsDto>(settingsService.getSettings(userPrincipal, locale), HttpStatus.OK);
 	}
 	
 	

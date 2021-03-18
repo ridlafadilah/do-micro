@@ -132,6 +132,11 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 30000
+    do-master:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
 
 ribbon:
   eureka:
@@ -156,7 +161,14 @@ do-security:
     ReadTimeout: 30000
     MaxAutoRetries: 3
     OkToRetryOnAllOperations: false
-    listOfServers: localhost:8085
+    listOfServers: localhost:8086
+
+do-master:
+  ribbon:
+    ReadTimeout: 30000
+    MaxAutoRetries: 3
+    OkToRetryOnAllOperations: false
+    listOfServers: localhost:8087
 
 security:
   oauth2:

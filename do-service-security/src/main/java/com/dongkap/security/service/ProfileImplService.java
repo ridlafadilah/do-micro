@@ -11,18 +11,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.SystemErrorException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.pattern.PatternGlobal;
 import com.dongkap.common.utils.AuthorizationProvider;
 import com.dongkap.common.utils.DateUtil;
 import com.dongkap.common.utils.ErrorCode;
+import com.dongkap.feign.client.master.ParameterI18nFeign;
 import com.dongkap.feign.dto.security.PersonalInfoDto;
 import com.dongkap.feign.service.ProfileService;
 import com.dongkap.security.dao.ContactUserRepo;
 import com.dongkap.security.entity.ContactUserEntity;
 import com.dongkap.security.entity.PersonalInfoEntity;
-import com.dongkap.security.entity.UserEntity;
 
 @Service("profileService")
 public class ProfileImplService implements ProfileService {
@@ -37,11 +38,14 @@ public class ProfileImplService implements ProfileService {
 	 */
 	// @Autowired
 	// private ParameterI18nService parameterI18nService;
+	
+	@Autowired
+	private ParameterI18nFeign parameterI18nFeign;
 
 	@Transactional
-	public ApiBaseResponse doUpdateProfile(PersonalInfoDto p_dto, UserEntity p_user, String p_locale) throws Exception {
-		if (p_user.getUsername() != null) {
-			ContactUserEntity contactUser = this.contactUserRepo.findByUser_Username(p_user.getUsername());
+	public ApiBaseResponse doUpdateProfile(PersonalInfoDto p_dto, UserPrincipal userPrincipal, String p_locale) throws Exception {
+		if (userPrincipal.getUsername() != null) {
+			ContactUserEntity contactUser = this.contactUserRepo.findByUser_Username(userPrincipal.getUsername());
 			if (contactUser != null) {
 				if (p_dto.getAddress() != null)
 					contactUser.setAddress(p_dto.getAddress());
@@ -59,9 +63,9 @@ public class ProfileImplService implements ProfileService {
 				contactUser.setDescription(p_dto.getDescription());
 				if (p_dto.getName() != null)
 					contactUser.setName(p_dto.getName());
-				if (p_dto.getEmail() != null && p_user.getProvider().equals(AuthorizationProvider.local.toString())) {
+				if (p_dto.getEmail() != null && userPrincipal.getProvider().equals(AuthorizationProvider.local.toString())) {
 					if (p_dto.getEmail().matches(PatternGlobal.EMAIL.getRegex())) {
-						p_user.setEmail(p_dto.getEmail());	
+						userPrincipal.setEmail(p_dto.getEmail());	
 					} else
 						throw new SystemErrorException(ErrorCode.ERR_SCR0008);
 				}
@@ -71,15 +75,15 @@ public class ProfileImplService implements ProfileService {
 					} else
 						throw new SystemErrorException(ErrorCode.ERR_SCR0007A);
 				}
-				contactUser.setModifiedBy(p_user.getUsername());
+				contactUser.setModifiedBy(userPrincipal.getUsername());
 				contactUser.setModifiedDate(new Date());
 				PersonalInfoEntity personalInfo = contactUser.getPersonalInfo();
 				if (personalInfo == null) {
 					personalInfo = new PersonalInfoEntity();
-					personalInfo.setCreatedBy(p_user.getUsername());
+					personalInfo.setCreatedBy(userPrincipal.getUsername());
 					personalInfo.setCreatedDate(new Date());
 				} else {
-					personalInfo.setModifiedBy(p_user.getUsername());
+					personalInfo.setModifiedBy(userPrincipal.getUsername());
 					personalInfo.setModifiedDate(new Date());
 				}
 				try {
@@ -107,9 +111,9 @@ public class ProfileImplService implements ProfileService {
 	}
 
 	public PersonalInfoDto getProfile(Authentication authentication, String p_locale) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		if (user.getUsername() != null) {
-			return getProfile(user.getUsername(), p_locale);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		if (userPrincipal.getUsername() != null) {
+			return getProfile(userPrincipal.getUsername(), p_locale);
 		} else
 			throw new SystemErrorException(ErrorCode.ERR_SYS0404);
 	}
@@ -149,12 +153,9 @@ public class ProfileImplService implements ProfileService {
 				temp.put("parameterCode", profile.getPersonalInfo().getGender());
 				dto.setGenderCode(profile.getPersonalInfo().getGender());
 				try {
-
-					/**
-					 * TO DO FIXME
-					 */
-					// dto.setGender(parameterI18nService.getParameter(temp, p_locale).getParameterValue());
-				} catch (Exception e) {}
+					final String gender = parameterI18nFeign.getParameter(temp, p_locale).getBody().getParameterValue();
+					dto.setGender(gender);
+				} catch (Exception e) {e.printStackTrace();}
 				dto.setPlaceOfBirth(profile.getPersonalInfo().getPlaceOfBirth());	
 				dto.setDateOfBirth(DateUtil.DATE.format(profile.getPersonalInfo().getDateOfBirth()));
 			}
@@ -166,11 +167,11 @@ public class ProfileImplService implements ProfileService {
 	@Transactional
 	@Override
 	public void doUpdatePhoto(Map<String, String> url, Authentication authentication, String locale) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		if (user.getUsername() != null && url != null) {
-			ContactUserEntity profile = this.contactUserRepo.findByUser_Username(user.getUsername());
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		if (userPrincipal.getUsername() != null && url != null) {
+			ContactUserEntity profile = this.contactUserRepo.findByUser_Username(userPrincipal.getUsername());
 			profile.setImage(url.get("url"));
-			profile.setModifiedBy(user.getUsername());
+			profile.setModifiedBy(userPrincipal.getUsername());
 			profile.setModifiedDate(new Date());
 			this.contactUserRepo.save(profile);
 		} else

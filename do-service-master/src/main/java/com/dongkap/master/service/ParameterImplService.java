@@ -40,7 +40,7 @@ public class ParameterImplService extends CommonService {
 			temp.setParameterCode(value.getParameterCode());
 			temp.setParameterGroupCode(value.getParameterGroup().getParameterGroupCode());
 			temp.setParameterGroupName(value.getParameterGroup().getParameterGroupName());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());

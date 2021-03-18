@@ -45,7 +45,7 @@ public class CityImplService extends CommonService {
 			temp.setCityCode(value.getCityCode());
 			temp.setCityName(value.getCityName());
 			temp.setProvinceName(value.getProvince().getProvinceName());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());

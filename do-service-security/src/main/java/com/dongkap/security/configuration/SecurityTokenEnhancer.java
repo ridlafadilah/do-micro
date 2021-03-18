@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
 import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.utils.DateUtil;
+import com.dongkap.common.utils.JsonUtils;
 import com.dongkap.feign.dto.security.MenuDto;
 import com.dongkap.security.service.MenuImplService;
 
@@ -33,6 +34,9 @@ public class SecurityTokenEnhancer implements TokenEnhancer {
 	
 	@Value("${do.signature.public-key}")
 	private String publicKey;
+	
+	@Autowired
+	private JsonUtils jsonUtils;
 
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -42,8 +46,12 @@ public class SecurityTokenEnhancer implements TokenEnhancer {
 			if(authentication.getOAuth2Request().getClientId().equals(clientIdWeb) && user.getRaw() == null) {
 				try {
 					Map<String, List<MenuDto>> allMenus = menuService.loadAllMenuByRole(user.getAuthorityDefault(), (user.getAttributes().get("locale") == null)? "en-US" : user.getAttributes().get("locale").toString());
-					additionalInfo.put("menus", allMenus.get("main"));
-					additionalInfo.put("extras", allMenus.get("extra"));
+					String menuString = jsonUtils.objToJson(allMenus.get("main"));
+					List<Map<String, Object>> menus = jsonUtils.jsonToListOfObj(Map.class, menuString);
+					String extraString = jsonUtils.objToJson(allMenus.get("extra"));
+					List<Map<String, Object>> extras = jsonUtils.jsonToListOfObj(Map.class, extraString);
+					additionalInfo.put("menus", menus);
+					additionalInfo.put("extras", extras);
 				} catch (Exception e) {
 					LOGGER.error(e.getMessage(), e);
 				}

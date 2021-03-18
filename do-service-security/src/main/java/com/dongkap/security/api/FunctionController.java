@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dongkap.common.aspect.ResponseSuccess;
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.BaseControllerException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.SuccessCode;
 import com.dongkap.feign.dto.security.FunctionRequestDto;
-import com.dongkap.security.entity.UserEntity;
 import com.dongkap.security.service.FunctionImplService;
 
 @RestController
@@ -32,8 +32,8 @@ public class FunctionController extends BaseControllerException {
 	public ResponseEntity<ApiBaseResponse> putFunction(Authentication authentication,
 			@RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String locale,
 			@RequestBody(required = true) FunctionRequestDto p_dto) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		return new ResponseEntity<ApiBaseResponse>(functionService.doPostFunction(p_dto, user, locale), HttpStatus.OK);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return new ResponseEntity<ApiBaseResponse>(functionService.doPostFunction(p_dto, userPrincipal, locale), HttpStatus.OK);
 	}
 	
 }

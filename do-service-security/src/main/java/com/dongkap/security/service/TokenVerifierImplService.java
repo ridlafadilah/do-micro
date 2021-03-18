@@ -91,7 +91,7 @@ public class TokenVerifierImplService {
         }
         userEntity.getAttributes().putAll(oAuth2UserInfo.getAttributes());
 
-        return this.accessTokenService.grantAuthDefault(userEntity);
+        return this.accessTokenService.grantAuthDefault(userEntity.getUserPrincipal());
     }
 	
 	private OAuth2UserInfoDto tokenVerifierGoogle(String token, String clientIdProvider) throws Exception {

@@ -61,7 +61,7 @@ public class RoleImplService extends CommonService {
 			RoleDto temp = new RoleDto();
 			temp.setAuthority(value.getAuthority());
 			temp.setDescription(value.getDescription());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedBy(value.getCreatedBy());
 			temp.setCreatedDate(value.getCreatedDate());
@@ -81,7 +81,7 @@ public class RoleImplService extends CommonService {
 			RoleDto temp = new RoleDto();
 			temp.setAuthority(value.getAuthority());
 			temp.setDescription(value.getDescription());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());

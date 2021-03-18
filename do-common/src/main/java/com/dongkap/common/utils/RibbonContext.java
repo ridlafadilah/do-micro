@@ -2,7 +2,7 @@ package com.dongkap.common.utils;
 
 public final class RibbonContext {
 
-	public static final String APP = "xa";
+	public static final String APP = "do";
 	public static final String BASE_PATH = "/" + APP + "/api";
 	
 	public static final String SECURITY = "security";

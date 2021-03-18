@@ -24,7 +24,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.dongkap.security.entity.UserEntity;
+import com.dongkap.common.entity.UserPrincipal;
 
 @Service("accessTokenService")
 public class AccessTokenImplService {
@@ -54,11 +54,11 @@ public class AccessTokenImplService {
 	private String clientId;
 
 	public OAuth2AccessToken grantAuthDefault(Authentication authentication) throws Exception {
-        UserEntity userEntity = (UserEntity)authentication.getPrincipal();
-		return grantAuthDefault(userEntity);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return grantAuthDefault(userPrincipal);
 	}
 
-	public OAuth2AccessToken grantAuthDefault(UserEntity userEntity) throws Exception {
+	public OAuth2AccessToken grantAuthDefault(UserPrincipal userPrincipal) throws Exception {
 
         ClientDetails clientDetails;
 		try {
@@ -69,16 +69,16 @@ public class AccessTokenImplService {
 		}
         
         Map<String, String> authorizationParameters = new HashMap<String, String>();
-        authorizationParameters.put("username", userEntity.getUsername());
+        authorizationParameters.put("username", userPrincipal.getUsername());
         authorizationParameters.put("client_id", clientId);
         authorizationParameters.put("grant_type", GRANT_TYPE);
         
         OAuth2Request authorizationRequest = new OAuth2Request(
                 authorizationParameters, clientId,
-                userEntity.getAuthorities(), true, clientDetails.getScope(), clientDetails.getResourceIds(), null,
+                userPrincipal.getAuthorities(), true, clientDetails.getScope(), clientDetails.getResourceIds(), null,
                 null, null);     
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userEntity, null, userEntity.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
 
         OAuth2Authentication oAuth2Authentication  = new OAuth2Authentication(
                 authorizationRequest, authenticationToken);

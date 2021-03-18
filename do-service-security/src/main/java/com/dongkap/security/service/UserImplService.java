@@ -85,7 +85,7 @@ public class UserImplService extends CommonService {
 			ProfileDto temp = new ProfileDto();
 			temp.setUsername(value.getUsername());
 			temp.setEmail(value.getEmail());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());

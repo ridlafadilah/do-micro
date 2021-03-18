@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dongkap.common.aspect.ResponseSuccess;
+import com.dongkap.common.entity.UserPrincipal;
 import com.dongkap.common.exceptions.BaseControllerException;
 import com.dongkap.common.http.ApiBaseResponse;
 import com.dongkap.common.utils.SuccessCode;
@@ -24,7 +25,6 @@ import com.dongkap.feign.dto.security.MenuDto;
 import com.dongkap.feign.dto.security.MenuItemDto;
 import com.dongkap.feign.dto.select.SelectResponseDto;
 import com.dongkap.feign.dto.tree.TreeDto;
-import com.dongkap.security.entity.UserEntity;
 import com.dongkap.security.service.MenuImplService;
 
 @RestController
@@ -37,8 +37,8 @@ public class MenuController extends BaseControllerException {
 	@RequestMapping(value = "/vw/get/menus/v.1", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, List<MenuDto>>> getAllMenuI18n(Authentication authentication,
 			@RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String locale) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		return new ResponseEntity<Map<String, List<MenuDto>>>(menuService.loadAllMenuByRole(user.getAuthorityDefault(), locale), HttpStatus.OK);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return new ResponseEntity<Map<String, List<MenuDto>>>(menuService.loadAllMenuByRole(userPrincipal.getAuthorityDefault(), locale), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/vw/auth/tree/menus/v.1/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,8 +67,8 @@ public class MenuController extends BaseControllerException {
 	public ResponseEntity<ApiBaseResponse> putMenu(Authentication authentication,
 			@RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE, required = false) String locale,
 			@RequestBody(required = true) MenuItemDto p_dto) throws Exception {
-		UserEntity user = (UserEntity) authentication.getPrincipal();
-		return new ResponseEntity<ApiBaseResponse>(menuService.doPostMenu(p_dto, user, locale), HttpStatus.OK);
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		return new ResponseEntity<ApiBaseResponse>(menuService.doPostMenu(p_dto, userPrincipal, locale), HttpStatus.OK);
 	}
 	
 	@ResponseSuccess(SuccessCode.OK_DELETED)

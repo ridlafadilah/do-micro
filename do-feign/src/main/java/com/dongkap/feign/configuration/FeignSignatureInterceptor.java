@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.dongkap.common.security.SignatureEncrypt;
-import com.dongkap.common.utils.DateUtil;
 
 @Service
 public class FeignSignatureInterceptor {
@@ -28,10 +27,9 @@ public class FeignSignatureInterceptor {
 	}
 	
 	public String getSignature(String path, String jwt) {
-		String datenow = DateUtil.formatDate(new Date(), DateUtil.DEFAULT_FORMAT_DATE);
+		// String datenow = DateUtil.formatDate(new Date(), DateUtil.DEFAULT_FORMAT_DATE);
 		String message = this.getPublicKey() + ":" + 
 				this.getTimestamp() + ":" +
-				datenow  + ":" +
 				path  + ":" +
 				jwt;
 		try {

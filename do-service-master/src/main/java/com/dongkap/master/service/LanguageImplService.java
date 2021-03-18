@@ -44,7 +44,7 @@ public class LanguageImplService extends CommonService {
 			LanguageDto temp = new LanguageDto();
 			temp.setLanguageCode(value.getLanguageCode());
 			temp.setIdentifier(value.getIdentifier());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());

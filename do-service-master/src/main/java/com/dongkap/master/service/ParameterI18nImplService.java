@@ -61,7 +61,7 @@ public class ParameterI18nImplService extends CommonService implements Parameter
 			temp.setParameterGroupName(value.getParameter().getParameterGroup().getParameterGroupName());
 			temp.setParameterValue(value.getParameterValue());
 			temp.setLocale(value.getLocaleCode());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());
@@ -138,7 +138,7 @@ public class ParameterI18nImplService extends CommonService implements Parameter
 			temp.setParameterGroupName(parameterI18n.getParameter().getParameterGroup().getParameterGroupName());
 			temp.setParameterValue(parameterI18n.getParameterValue());
 			temp.setLocale(parameterI18n.getLocaleCode());
-			temp.setActive(parameterI18n.isActive());
+			temp.setIsActive(parameterI18n.isActive());
 			temp.setVersion(parameterI18n.getVersion());
 			temp.setCreatedDate(parameterI18n.getCreatedDate());
 			temp.setCreatedBy(parameterI18n.getCreatedBy());

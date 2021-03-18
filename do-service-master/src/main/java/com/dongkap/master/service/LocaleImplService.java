@@ -65,7 +65,7 @@ public class LocaleImplService extends CommonService {
 			temp.setIcon(value.getIcon());
 			temp.setLocaleDefault(value.isLocaleDefault());
 			temp.setLocaleEnabled(value.isLocaleEnabled());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedBy(value.getCreatedBy());
 			temp.setCreatedDate(value.getCreatedDate());
@@ -89,7 +89,7 @@ public class LocaleImplService extends CommonService {
 			temp.setIcon(value.getIcon());
 			temp.setLocaleDefault(value.isLocaleDefault());
 			temp.setLocaleEnabled(value.isLocaleEnabled());
-			temp.setActive(value.isActive());
+			temp.setIsActive(value.isActive());
 			temp.setVersion(value.getVersion());
 			temp.setCreatedDate(value.getCreatedDate());
 			temp.setCreatedBy(value.getCreatedBy());
