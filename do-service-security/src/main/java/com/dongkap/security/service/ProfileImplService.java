@@ -89,11 +89,11 @@ public class ProfileImplService implements ProfileService {
 				try {
 					Map<String, Object> temp = new HashMap<String, Object>();
 					temp.put("parameterCode", p_dto.getGenderCode());
-					/**
-					 * TO DO FIXME
-					 */
-					/* if(parameterI18nService.getParameter(temp, p_locale).getParameterValue() != null)
-						personalInfo.setGender(p_dto.getGenderCode()); */
+					
+					final String gender = parameterI18nFeign.getParameter(temp, p_locale).getParameterValue();
+					if(gender != null) {
+						personalInfo.setGender(p_dto.getGenderCode());
+					}
 				} catch (Exception e) {}
 				if(p_dto.getIdNumber() != null)
 					personalInfo.setIdNumber(p_dto.getIdNumber());
@@ -153,7 +153,7 @@ public class ProfileImplService implements ProfileService {
 				temp.put("parameterCode", profile.getPersonalInfo().getGender());
 				dto.setGenderCode(profile.getPersonalInfo().getGender());
 				try {
-					final String gender = parameterI18nFeign.getParameter(temp, p_locale).getBody().getParameterValue();
+					final String gender = parameterI18nFeign.getParameter(temp, p_locale).getParameterValue();
 					dto.setGender(gender);
 				} catch (Exception e) {e.printStackTrace();}
 				dto.setPlaceOfBirth(profile.getPersonalInfo().getPlaceOfBirth());	

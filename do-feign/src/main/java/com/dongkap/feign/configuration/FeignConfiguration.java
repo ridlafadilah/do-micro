@@ -2,6 +2,7 @@ package com.dongkap.feign.configuration;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
@@ -12,8 +13,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import feign.Feign;
-import feign.Logger;
 import feign.RequestInterceptor;
 import feign.Retryer;
 import feign.codec.Decoder;
@@ -23,15 +22,22 @@ public class FeignConfiguration {
 	
 	@Autowired
 	private FeignSignatureInterceptor feignSignatureInterceptor;
+
+	@Value("${retryer.maxAttempts}")
+    private int maxAttempts;
 	
+	@Value("${retryer.backoff}")
+    private long backoff;
+	
+	/*
 	@Bean
 	public Feign.Builder feignBuilder(Retryer retryer) {
-	    return Feign.builder()
+	    return HystrixFeign.builder()
 	    		.requestInterceptor(oauth2FeignRequestInterceptor())
 	    		.decoder(springDecoder())
-	            .retryer(retryer)
-	            .logLevel(feignLoggerLevel());
+	            .retryer(retryer);
 	}
+	*/
 	
 	@Bean
 	public RequestInterceptor oauth2FeignRequestInterceptor() {
@@ -47,12 +53,7 @@ public class FeignConfiguration {
 	
     @Bean
     public Retryer retryer() {
-        return new CustomRetryer(30000, 3);
-    }
-
-    @Bean
-    Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
+        return new CustomRetryer(backoff, maxAttempts);
     }
 
     public ObjectMapper customObjectMapper(){

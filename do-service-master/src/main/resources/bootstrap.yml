@@ -46,10 +46,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
-eureka:
-  client:
-    enabled: false
-
 feign:
   compression:
     request:
@@ -60,21 +56,30 @@ feign:
     enabled: true
   client:
     config:
-      do-file:
-        connectTimeout: 30000
-        readTimeout: 30000
+      do-security:
+        connectTimeout: 15000
+        readTimeout: 15000
         loggerLevel: full
         errorDecoder: com.dongkap.feign.decoder.FeignErrorDecoder
       do-profile:
-        connectTimeout: 30000
-        readTimeout: 30000
+        connectTimeout: 15000
+        readTimeout: 15000
         loggerLevel: full
         errorDecoder: com.dongkap.feign.decoder.FeignErrorDecoder
-      do-security:
-        connectTimeout: 30000
-        readTimeout: 30000
+      do-master:
+        connectTimeout: 15000
+        readTimeout: 15000
         loggerLevel: full
         errorDecoder: com.dongkap.feign.decoder.FeignErrorDecoder
+      do-file:
+        connectTimeout: 15000
+        readTimeout: 15000
+        loggerLevel: full
+        errorDecoder: com.dongkap.feign.decoder.FeignErrorDecoder
+
+retryer:
+  backoff: 5000
+  maxAttempts: 3
 
 hystrix:
   shareSecurityContext: true
@@ -83,47 +88,59 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 30000
-    do-file:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 30000
-    do-profile:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 30000
+            timeoutInMilliseconds: 15000
     do-security:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 30000
+            timeoutInMilliseconds: 15000
+    do-profile:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+    do-master:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+    do-file:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
 
 ribbon:
   eureka:
     enabled: false
 
-do-file:
+do-security:
   ribbon:
-    ReadTimeout: 30000
+    ReadTimeout: 15000
     MaxAutoRetries: 3
     OkToRetryOnAllOperations: false
-    listOfServers: localhost:8085
+    listOfServers: localhost:8086
 
 do-profile:
   ribbon:
-    ReadTimeout: 30000
+    ReadTimeout: 15000
     MaxAutoRetries: 3
     OkToRetryOnAllOperations: false
-    listOfServers: localhost:8085
+    listOfServers: localhost:8086
 
-do-security:
+do-master:
   ribbon:
-    ReadTimeout: 30000
+    ReadTimeout: 15000
     MaxAutoRetries: 3
     OkToRetryOnAllOperations: false
-    listOfServers: localhost:8085
+    listOfServers: localhost:8087
+
+do-file:
+  ribbon:
+    ReadTimeout: 15000
+    MaxAutoRetries: 3
+    OkToRetryOnAllOperations: false
+    listOfServers: localhost:8088
 
 security:
   oauth2:

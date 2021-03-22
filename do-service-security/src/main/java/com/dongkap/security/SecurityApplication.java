@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -20,6 +21,7 @@ import com.dongkap.security.configuration.ApplicationProperties;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @EnableResourceServer
+@EnableCircuitBreaker
 @EnableConfigurationProperties(ApplicationProperties.class)
 @EnableFeignClients(basePackages = {"com.dongkap.feign"})
 @EnableJpaRepositories(basePackages = { "com.dongkap.*.dao", "com.dongkap.*.service" })
